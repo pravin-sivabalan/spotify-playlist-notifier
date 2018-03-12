@@ -4,7 +4,8 @@ let Schema = mongoose.Schema;
 let UserSchema = new Schema({
     username: {
       type: String,
-      required: true
+      required: true,
+      unique : true
     },
     profile_pic: {
       type: String,

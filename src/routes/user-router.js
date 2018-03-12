@@ -11,7 +11,7 @@ router.use((req, res, next) => {
 
 router.get('/dash', (req, res) => {
   let user = req.session.user;
-  res.render('dashboard', { username: req.session.user.username });
+  res.render('dashboard', { username: user.username, profile_pic: user.profile_pic });
 });
 
 router.get('/create', (req, res) => {

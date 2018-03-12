@@ -32,17 +32,26 @@ router.get('/callback', (req, res) => {
     request.get(options, (error, response, userInfo) => {
       if(response.statusCode !== 200) return res.redirect('/error?message=' + response.statusCode);
       userInfo = JSON.parse(userInfo);
-      let user = new User({
-        username: userInfo.id,
-        profile_pic: userInfo.images[0].url,
-        access_token: body.access_token,
-        refresh_token: body.refresh_token
-      });
-      // TODO: handle exisiting users
-      user.save((err, user) => {
-          if(err) return res.redirect('/error?message=' + err);
-          req.session.user = user;
-          return res.redirect('/user/dash');
+      User.findOne({username: userInfo.id }, (err, user) => {
+        if (err) return res.redirect('/error?message=' + err);
+        console.log(user);
+        if(user) {
+          user.profile_pic = userInfo.images[0].url;
+          user.access_token = body.access_token;
+          user.refresh_token = body.refresh_token;
+        } else {
+          user = new User({
+            username: userInfo.id,
+            profile_pic: userInfo.images[0].url,
+            access_token: body.access_token,
+            refresh_token: body.refresh_token
+          });
+        }
+        user.save((err, user) => {
+            if(err) return res.redirect('/error?message=' + err);
+            req.session.user = user;
+            return res.redirect('/user/dash');
+        });
       });
     });
   });
