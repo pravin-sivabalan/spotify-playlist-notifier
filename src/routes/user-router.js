@@ -3,11 +3,9 @@ let request = require('request');
 let router = express.Router();
 
 router.use((req, res, next) => {
-  if(!req.session.user) {
-    return res.redirect('/');
-  }
+  if(!req.session.user) return res.redirect('/');
   next();
-})
+});
 
 router.get('/dash', (req, res) => {
   let user = req.session.user;
